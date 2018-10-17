@@ -10,38 +10,48 @@ from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-# Constant Values
-font_name = "Lato-Regular"
-font_path = "Lato/Lato-Regular.ttf"
+# Constant Values. Do not change
 edge_offset = .15 * inch
 bottom_offset = 1 * inch
 AC_width = 4 * inch
 AC_height = 3.25 * inch
 
-# Variable Values
-jpg_path = "AccessCardsJpg/AC_Hacker.jpg"
+# Variable Values, change depending on the needs / paths.
+font_name = "Lato-Regular"
+font_path = "Resources/Lato/Lato-Regular.ttf"
+jpg_path = "Resources/AccessCardsJpg/AC_Hacker.jpg"
+icon_path = "Resources/language_icons_jpg/"
 pdf_file_name = "hackers.pdf"
 
-# Define our canvas
+# Define our canvas.
 c = canvas.Canvas(pdf_file_name)
 
-# Import font from .ttf file
+# Import font from .ttf file.
 pdfmetrics.registerFont(TTFont(font_name, font_path))
 
 
-# Person/Hacker Class
 class Person:
-    def __init__(self, first_name, last_name, university):
+    def __init__(self, first_name, last_name, university, skills):
+        """
+        Constructor for the Person Object.
+        :param first_name: First name of the person.
+        :param last_name: Last name of the person.
+        :param university: University the person attends.
+        :param skills: Skills list that the person has. Can be from 0 to 3 skills.
+        """
         self.first_name = first_name
         self.last_name = last_name
         self.university = university
+        self.skills = [skill.strip('\"') for skill in skills]
         self.name_len = len(first_name) + len(last_name) + 1
 
+        # Checks if the First name is longer than 18 characters. If so, then shorten.
         if len(self.first_name) > 18:
             words = self.first_name.split()
             letters = [word[0] for word in words]
             self.first_name = "".join(letters)
 
+        # Edits the school name to fit on the badge.
         if university == "Other/School not listed":
             self.university = " "
         elif university == "Indiana University/Purdue University at Indianapolis":
@@ -54,57 +64,141 @@ class Person:
             self.university = "RHIT"
 
 
-# Left row of cards
 def draw_left(i, hacker):
+    """
+    Draws the Access Cards on the left-hand side of the page.
+    :param i: Row offset to draw on, from 0 to 2.
+    :param hacker: Person object to reference to.
+    :return: none
+    """
+
+    # Draws an empty badge on the canvas.
     c.drawImage(jpg_path, edge_offset, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
 
+    # Check length of hacker name to set the font.
     if hacker.name_len <= 18:
         c.setFont(font_name, 16)
     else:
         c.setFont(font_name, 12)
 
+    # Draws the first and last name on the badge.
     c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2.25 * inch + i * AC_height,
                         text=hacker.first_name + " " + hacker.last_name)
+
+    # Draws the school on the badge.
     c.setFont(font_name, 10)
     c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2 * inch + i * AC_height,
                         text=hacker.university)
 
+    # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
+    if len(hacker.skills) == 1 and hacker.skills[0] != "null" and hacker.skills[0].strip('\\') != "":
+        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", edge_offset + 1.75 * inch,
+                    bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+    elif len(hacker.skills) == 2:
+        n = 0
+        for skill in hacker.skills:
+            if n == 1:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.375 * inch,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            else:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.125 * inch,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            n += 1
+    elif len(hacker.skills) == 3:
+        n = 0
+        for skill in hacker.skills:
+            if n == 0:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.063 * inch,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            elif n == 1:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.75 * inch,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            else:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.437 * inch,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            n += 1
 
-# Right row of cards
+
 def draw_right(i, hacker):
+    """
+    Draws the Access Cards on the right-hand side of the page.
+    :param i: Row offset to draw on, from 0 to 2.
+    :param hacker: Person object to reference to.
+    :return: none
+    """
+
+    # Draws an empty badge on the canvas.
     c.drawImage(jpg_path, edge_offset + AC_width, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
+
+    # Checks for the length of the name to set the font size.
     if hacker.name_len <= 18:
         c.setFont(font_name, 16)
     else:
         c.setFont(font_name, 12)
+
+    # Draws the full name on the badge.
     c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2.25 * inch + i * AC_height,
                         text=hacker.first_name + " " + hacker.last_name)
+
+    # Draws the school on the badge.
     c.setFont(font_name, 10)
-    # If a listed school, print onto badge
     c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2 * inch + i * AC_height,
                         text=hacker.university)
 
+    # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
+    if len(hacker.skills) == 1 and hacker.skills[0] != "null" and hacker.skills[0].strip('\\') != "":
+        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", edge_offset + 1.75 * inch + AC_width,
+                    bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+    elif len(hacker.skills) == 2:
+        n = 0
+        for skill in hacker.skills:
+            if n == 1:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.375 * inch + AC_width,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            else:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.125 * inch + AC_width,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            n += 1
+    elif len(hacker.skills) == 3:
+        n = 0
+        for skill in hacker.skills:
+            if n == 0:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.063 * inch + AC_width,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            elif n == 1:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.75 * inch + AC_width,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            else:
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.437 * inch + AC_width,
+                            bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
+            n += 1
 
+
+# Open CSV file.
 with open('rsvp_badges.csv', mode='r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     row_num = 0
+    # For each row in the csv file.
     for row in csv_reader:
-        person = Person(first_name=row[0], last_name=row[1], university=row[2])
+        # Create instance of a person object to pass to either the left draw or right draw function.
+        person = Person(first_name=row[0], last_name=row[1], university=row[2], skills=row[3:6])
+        # If line is even, draw left. Else draw right.
         if line_count % 2 == 0:
             draw_left(row_num, person)
         else:
             draw_right(row_num, person)
             row_num += 1
 
+        # If on the third row, go to a new page and reset the row.
         if row_num == 3:
             c.showPage()
             row_num = 0
 
         line_count += 1
 
-print(f'Processed {line_count} lines.')
+print(f'Processed {line_count} Badges.')
 
 c.save()
