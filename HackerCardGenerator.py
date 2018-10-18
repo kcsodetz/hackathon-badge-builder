@@ -22,6 +22,7 @@ font_path = "Resources/Lato/Lato-Regular.ttf"
 jpg_path = "Resources/AccessCardsJpg/AC_Hacker.jpg"
 icon_path = "Resources/language_icons_jpg/"
 pdf_file_name = "hackers.pdf"
+csv_file_path = "rsvp_badges_2.csv"
 
 # Define our canvas.
 c = canvas.Canvas(pdf_file_name, pagesize=letter)
@@ -58,10 +59,6 @@ class Person:
             self.university = "IUPUI"
         elif university == "Indiana University/Purdue University at Fort Wayne":
             self.university = "IPFW"
-        # elif university == "University of Illinois-Urbana-Champaign":
-        #     self.university = "UIUC"
-        # elif university == "Rose-Hulman Institute of Technology":
-        #     self.university = "RHIT"
 
 
 def draw_left(i, hacker):
@@ -144,7 +141,7 @@ def draw_right(i, hacker):
 
     # Draws the school on the badge.
     c.setFont(font_name, 10)
-    c.drawCentredString(x=0 + 2.9 * inch + AC_width, y=bottom_offset + 1.75 * inch + i * AC_height,
+    c.drawCentredString(x=2.9 * inch + AC_width, y=bottom_offset + 1.75 * inch + i * AC_height,
                         text=hacker.university)
 
     # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
@@ -177,7 +174,8 @@ def draw_right(i, hacker):
 
 
 # Open CSV file.
-with open('rsvp_badges.csv', mode='r') as csv_file:
+print(f'Reading from {csv_file_path}')
+with open(csv_file_path, mode='r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     row_num = 0
@@ -199,6 +197,6 @@ with open('rsvp_badges.csv', mode='r') as csv_file:
 
         line_count += 1
 
-print(f'Processed {line_count} Badges.')
+print(f'Processed {line_count} Badges to {pdf_file_name}')
 
 c.save()
