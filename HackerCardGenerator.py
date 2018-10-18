@@ -7,14 +7,14 @@ Since: 10/16/2018
 import csv
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
 # Constant Values. Do not change
-edge_offset = .15 * inch
-bottom_offset = 1 * inch
-AC_width = 4 * inch
-AC_height = 3.25 * inch
+bottom_offset = 2 * inch
+AC_width = 4.25 * inch
+AC_height = 3 * inch
 
 # Variable Values, change depending on the needs / paths.
 font_name = "Lato-Regular"
@@ -24,7 +24,7 @@ icon_path = "Resources/language_icons_jpg/"
 pdf_file_name = "hackers.pdf"
 
 # Define our canvas.
-c = canvas.Canvas(pdf_file_name)
+c = canvas.Canvas(pdf_file_name, pagesize=letter)
 
 # Import font from .ttf file.
 pdfmetrics.registerFont(TTFont(font_name, font_path))
@@ -58,10 +58,10 @@ class Person:
             self.university = "IUPUI"
         elif university == "Indiana University/Purdue University at Fort Wayne":
             self.university = "IPFW"
-        elif university == "University of Illinois-Urbana-Champaign":
-            self.university = "UIUC"
-        elif university == "Rose-Hulman Institute of Technology":
-            self.university = "RHIT"
+        # elif university == "University of Illinois-Urbana-Champaign":
+        #     self.university = "UIUC"
+        # elif university == "Rose-Hulman Institute of Technology":
+        #     self.university = "RHIT"
 
 
 def draw_left(i, hacker):
@@ -73,49 +73,49 @@ def draw_left(i, hacker):
     """
 
     # Draws an empty badge on the canvas.
-    c.drawImage(jpg_path, edge_offset, bottom_offset + i * AC_height, width=AC_width,
+    c.drawImage(jpg_path, 0, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
 
     # Check length of hacker name to set the font.
-    if hacker.name_len <= 18:
+    if hacker.name_len <= 22:
         c.setFont(font_name, 16)
     else:
-        c.setFont(font_name, 12)
+        c.setFont(font_name, 14)
 
     # Draws the first and last name on the badge.
-    c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2.25 * inch + i * AC_height,
+    c.drawCentredString(x=2.9 * inch, y=bottom_offset + 2 * inch + i * AC_height,
                         text=hacker.first_name + " " + hacker.last_name)
 
     # Draws the school on the badge.
     c.setFont(font_name, 10)
-    c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2 * inch + i * AC_height,
+    c.drawCentredString(x=0 + 2.9 * inch, y=bottom_offset + 1.75 * inch + i * AC_height,
                         text=hacker.university)
 
     # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
     if len(hacker.skills) == 1 and hacker.skills[0] != "null" and hacker.skills[0].strip('\\') != "":
-        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", edge_offset + 1.75 * inch,
+        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", 1.875 * inch,
                     bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
     elif len(hacker.skills) == 2:
         n = 0
         for skill in hacker.skills:
             if n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.375 * inch,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.425 * inch,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.125 * inch,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.325 * inch,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             n += 1
     elif len(hacker.skills) == 3:
         n = 0
         for skill in hacker.skills:
             if n == 0:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.063 * inch,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.175 * inch,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             elif n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.75 * inch,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.875 * inch,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.437 * inch,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.575 * inch,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             n += 1
 
@@ -129,49 +129,49 @@ def draw_right(i, hacker):
     """
 
     # Draws an empty badge on the canvas.
-    c.drawImage(jpg_path, edge_offset + AC_width, bottom_offset + i * AC_height, width=AC_width,
+    c.drawImage(jpg_path, AC_width, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
 
     # Checks for the length of the name to set the font size.
-    if hacker.name_len <= 18:
+    if hacker.name_len <= 22:
         c.setFont(font_name, 16)
     else:
-        c.setFont(font_name, 12)
+        c.setFont(font_name, 14)
 
     # Draws the full name on the badge.
-    c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2.25 * inch + i * AC_height,
+    c.drawCentredString(x=2.9 * inch + AC_width, y=bottom_offset + 2 * inch + i * AC_height,
                         text=hacker.first_name + " " + hacker.last_name)
 
     # Draws the school on the badge.
     c.setFont(font_name, 10)
-    c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2 * inch + i * AC_height,
+    c.drawCentredString(x=0 + 2.9 * inch + AC_width, y=bottom_offset + 1.75 * inch + i * AC_height,
                         text=hacker.university)
 
     # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
     if len(hacker.skills) == 1 and hacker.skills[0] != "null" and hacker.skills[0].strip('\\') != "":
-        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", edge_offset + 1.75 * inch + AC_width,
+        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", 1.875 * inch + AC_width,
                     bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
     elif len(hacker.skills) == 2:
         n = 0
         for skill in hacker.skills:
             if n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.375 * inch + AC_width,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.425 * inch + AC_width,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.125 * inch + AC_width,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.325 * inch + AC_width,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             n += 1
     elif len(hacker.skills) == 3:
         n = 0
         for skill in hacker.skills:
             if n == 0:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.063 * inch + AC_width,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.175 * inch + AC_width,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             elif n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 1.75 * inch + AC_width,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.875 * inch + AC_width,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", edge_offset + 2.437 * inch + AC_width,
+                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.575 * inch + AC_width,
                             bottom_offset + 0.1 * inch + i * AC_height, width=30, height=30, mask=None)
             n += 1
 

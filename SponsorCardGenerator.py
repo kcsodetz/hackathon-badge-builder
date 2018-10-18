@@ -1,5 +1,5 @@
 """
-Python script to generate the Executive team badges for Boilermake VI
+Python script to generate the Sponsor badges for Boilermake VI
 
 Author: Ken Sodetz
 Since: 10/17/2018
@@ -7,7 +7,6 @@ Since: 10/17/2018
 import csv
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
@@ -15,40 +14,41 @@ from reportlab.pdfbase.ttfonts import TTFont
 pdfmetrics.registerFont(TTFont('Lato-Regular', 'Resources/Lato/Lato-Regular.ttf'))
 
 # Constant Values
-bottom_offset = 2 * inch
-AC_width = 4.25 * inch
-AC_height = 3 * inch
-jpg_path = "Resources/AccessCardsJpg/AC_Exec.jpg"
+edge_offset = .15 * inch
+bottom_offset = 1 * inch
+AC_width = 4 * inch
+AC_height = 3.25 * inch
+jpg_path = "Resources/AccessCardsJpg/AC_Sponsor.jpg"
 
 # Define our canvas
-c = canvas.Canvas('execs.pdf', pagesize=letter)
+c = canvas.Canvas('sponsors.pdf')
 
 
 # Left row of cards
-def draw_left(i, name):
-    c.drawImage(jpg_path, 0, bottom_offset + i * AC_height, width=AC_width,
+def draw_left(i, name, company):
+    c.drawImage(jpg_path, edge_offset, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
     c.setFont("Lato-Regular", 16)
-    c.drawCentredString(x=0 + 2.9 * inch, y=bottom_offset + 2.25 * inch + i * AC_height, text=name)
-    c.setFont("Lato-Regular", 10)
-    c.drawCentredString(x=0 + 2.9 * inch, y=bottom_offset + 2 * inch + i * AC_height,
-                        text="Purdue University")
+    c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2.25 * inch + i * AC_height, text=name)
+    c.setFont("Lato-Regular", 19)
+    c.drawCentredString(x=edge_offset + 2.9 * inch, y=bottom_offset + 2 * inch + i * AC_height,
+                        text=company)
 
 
 # Right row of cards
-def draw_right(i, name):
-    c.drawImage(jpg_path, 0 + AC_width, bottom_offset + i * AC_height, width=AC_width,
+def draw_right(i, name, company):
+    c.drawImage(jpg_path, edge_offset + AC_width, bottom_offset + i * AC_height, width=AC_width,
                 height=AC_height, mask=None)
     c.setFont("Lato-Regular", 16)
-    c.drawCentredString(x=0 + 2.9 * inch + AC_width, y=bottom_offset + 2.25 * inch + i * AC_height,
+    c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2.25 * inch + i * AC_height,
                         text=name)
     c.setFont("Lato-Regular", 10)
-    c.drawCentredString(x=0 + 2.9 * inch + AC_width, y=bottom_offset + 2 * inch + i * AC_height,
-                        text="Purdue University")
+    c.drawCentredString(x=edge_offset + 2.9 * inch + AC_width, y=bottom_offset + 2 * inch + i * AC_height,
+                        text=company)
 
 
 # Open CSV file.
-with open('execs.csv', mode='r') as csv_file:
+with open('sponsors.csv', mode='r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     row_num = 0
