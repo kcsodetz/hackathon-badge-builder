@@ -1,3 +1,9 @@
+"""
+Python script to generate table numbers for Boilermake VI
+
+Author: Ken Sodetz
+Since: 10/17/2018
+"""
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
