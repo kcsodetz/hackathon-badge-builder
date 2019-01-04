@@ -1,3 +1,5 @@
 *.csv
 *.pdf
-.idea
+.idea/
+csv/
+pdf/
