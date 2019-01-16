@@ -54,10 +54,9 @@ class Person:
             self.first_name = "".join(letters)
 
         # set font size based on name length
+        c.setFont(font_name, 14)
         if self.name_len <= 22:
             c.setFont(font_name, 16)
-        else:
-            c.setFont(font_name, 14)
 
         # Edits the school name to fit on the badge.
         if university == "Other/School not listed":
