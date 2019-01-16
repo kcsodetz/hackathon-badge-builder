@@ -9,7 +9,7 @@ NC='\033[0m'
 printf "Running setup...\n"
 
 
-if [ ! -d src/out ]; then
+if [[ ! -d src/out ]]; then
 	printf "Creating src/out...\n"
 	mkdir src/out  
 	printf "Successfully created src/out\n"
@@ -17,7 +17,7 @@ else
 	printf "${WARN}src/out already exists${NC}\n"
 fi
 
-if [ ! -d src/data ]; then
+if [[ ! -d src/data ]]; then
 	printf "Creating src/data...\n"
 	mkdir src/data  
 	printf "Successfully created src/data\n"
@@ -25,16 +25,16 @@ else
 	printf "${WARN}src/data already exists${NC}\n"
 fi
 
-reportlab=$(python3 -m pip --disable-pip-version-check freeze | grep reportlab)
+report_lab=$(python3 -m pip --disable-pip-version-check freeze | grep reportlab)
 
-if [ -z "$reportlab" ]; then
+if [[ -z "$report_lab" ]]; then
 	printf "Installing required python libraries\n"
 	python3 -m pip --disable-pip-version-check install -r requirements.txt
 else
 	printf "Libraries already installed\n"
 fi
 
-echo ${reportlab}
+echo ${report_lab}
 
 printf "${OK}Setup complete\n"
 
