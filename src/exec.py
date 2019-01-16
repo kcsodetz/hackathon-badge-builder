@@ -14,6 +14,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 # Import font from .ttf file
 pdfmetrics.registerFont(TTFont('Lato-Regular', '../res/Lato/Lato-Regular.ttf'))
 
+# Terminal Colors
+OK = '\033[92m'
+
 # Constant Values
 BOTTOM_OFFSET = 2 * inch
 CARD_WIDTH = 4.25 * inch
@@ -68,5 +71,5 @@ with open(csv_path, mode='r') as csv_file:
 
         line_count += 1
 
-print("Processed {} Badges to {}".format(line_count, pdf_path))
+print(OK + "Processed {} Badges to {}".format(line_count, pdf_path))
 c.save()

@@ -11,6 +11,9 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+# Terminal Colors
+OK = '\033[92m'
+
 # Path values
 font_name = "Lato-Regular"
 font_path = "../res/Lato/Lato-Regular.ttf"
@@ -131,5 +134,5 @@ with open(CSV_FILE_PATH, mode='r') as csv_file:
 
         line_count += 1
 
-print('Processed {} Badges to {}'.format(line_count, PDF_PATH))
+print(OK + 'Processed {} Badges to {}'.format(line_count, PDF_PATH))
 c.save()

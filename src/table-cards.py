@@ -20,8 +20,13 @@ jpg_path = "res/AccessCardsJpg/AC_Hacker.jpg"
 pdf_path = "out/tables.pdf"
 img_path = "../res/BM_Logo.jpg"
 
+# Terminal Colors
+OK = '\033[92m'
+
+# Number of cards to print
 num_table_cards = 85
 
+# Set font
 pdfmetrics.registerFont(TTFont(font_name, font_path))
 
 # Define our canvas.
@@ -37,5 +42,5 @@ for i in range(1, num_table_cards + 1):
     c.drawImage(img_path, 4.5 * -inch, 2 * inch, 1.5 * inch, 1.5 * inch)
     c.showPage()
 
-print('Processed {} Table cards to {}'.format(num_table_cards, pdf_path))
+print(OK + 'Processed {} Table cards to {}'.format(num_table_cards, pdf_path))
 c.save()
