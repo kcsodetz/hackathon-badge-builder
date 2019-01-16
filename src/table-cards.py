@@ -10,7 +10,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-
 # Constant Values.
 bottom_offset = 2 * inch
 AC_width = 4.25 * inch

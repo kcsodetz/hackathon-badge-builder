@@ -15,9 +15,11 @@ from reportlab.pdfbase.ttfonts import TTFont
 pdfmetrics.registerFont(TTFont('Lato-Regular', '../res/Lato/Lato-Regular.ttf'))
 
 # Constant Values
-bottom_offset = 2 * inch
-card_width = 4.25 * inch
-card_height = 3 * inch
+BOTTOM_OFFSET = 2 * inch
+CARD_WIDTH = 4.25 * inch
+CARD_HEIGHT = 3 * inch
+
+# File paths
 jpg_path = "../res/AccessCardsJpg/AC_Exec.jpg"
 pdf_path = "out/execs.pdf"
 csv_path = "data/execs.csv"
@@ -26,26 +28,21 @@ csv_path = "data/execs.csv"
 c = canvas.Canvas(pdf_path, pagesize=letter)
 
 
-# Left row of cards
-def draw_left(i, name):
-    c.drawImage(jpg_path, 0, bottom_offset + i * card_height, width=card_width,
-                height=card_height, mask=None)
+def draw(i, name, left_right_offset):
+    """
+    Draws the Access Cards on the page.
+    :param i: Row offset to draw on, from 0 to 2
+    :param name: Name of the exec
+    :param left_right_offset: Offset for drawing on the left or right side of the page
+    :return: None
+    """
+    c.drawImage(jpg_path, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
+                height=CARD_HEIGHT, mask=None)
     c.setFont("Lato-Regular", 16)
-    c.drawCentredString(x=2.9 * inch, y=bottom_offset + 2 * inch + i * card_height, text=name)
-    c.setFont("Lato-Regular", 10)
-    c.drawCentredString(x=2.9 * inch, y=bottom_offset + 1.75 * inch + i * card_height,
-                        text="Purdue University")
-
-
-# Right row of cards
-def draw_right(i, name):
-    c.drawImage(jpg_path, card_width, bottom_offset + i * card_height, width=card_width,
-                height=card_height, mask=None)
-    c.setFont("Lato-Regular", 16)
-    c.drawCentredString(x=2.9 * inch + card_width, y=bottom_offset + 2 * inch + i * card_height,
+    c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 2 * inch + i * CARD_HEIGHT,
                         text=name)
     c.setFont("Lato-Regular", 10)
-    c.drawCentredString(x=0 + 2.9 * inch + card_width, y=bottom_offset + 1.75 * inch + i * card_height,
+    c.drawCentredString(x=0 + 2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 1.75 * inch + i * CARD_HEIGHT,
                         text="Purdue University")
 
 
@@ -59,9 +56,9 @@ with open(csv_path, mode='r') as csv_file:
     for row in csv_reader:
         # If line is even, draw left. Else draw right.
         if line_count % 2 == 0:
-            draw_left(row_num, row[0])
+            draw(row_num, row[0], 0)
         else:
-            draw_right(row_num, row[0])
+            draw(row_num, row[0], CARD_WIDTH)
             row_num += 1
 
         # If on the third row, go to a new page and reset the row.
@@ -72,5 +69,4 @@ with open(csv_path, mode='r') as csv_file:
         line_count += 1
 
 print("Processed {} Badges to {}".format(line_count, pdf_path))
-
 c.save()

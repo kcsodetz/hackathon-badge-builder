@@ -11,21 +11,22 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-# Constant Values. Do not change
-bottom_offset = 2 * inch
-card_width = 4.25 * inch
-card_height = 3 * inch
-
-# Variable Values, change depending on the needs / paths.
+# Path values
 font_name = "Lato-Regular"
 font_path = "../res/Lato/Lato-Regular.ttf"
-jpg_path = "../res/AccessCardsJpg/AC_Hacker.jpg"
-icon_path = "../res/language_icons_jpg/"
-pdf_path = "out/hackers.pdf"
-csv_file_path = "data/rsvp_badges_2.csv"
+background_path = "../res/AccessCardsJpg/AC_Hacker.jpg"
+csv_file = "rsvp_badges_2.csv"
+
+# Constant Values. Do not change
+BOTTOM_OFFSET = 2 * inch
+CARD_WIDTH = 4.25 * inch
+CARD_HEIGHT = 3 * inch
+PDF_PATH = "out/hackers.pdf"
+CSV_FILE_PATH = "data/" + csv_file
+ICON_PATH = "../res/language_icons_jpg/"
 
 # Define our canvas.
-c = canvas.Canvas(pdf_path, pagesize=letter)
+c = canvas.Canvas(PDF_PATH, pagesize=letter)
 
 # Import font from .ttf file.
 pdfmetrics.registerFont(TTFont(font_name, font_path))
@@ -43,7 +44,7 @@ class Person:
         self.first_name = first_name
         self.last_name = last_name
         self.university = university
-        self.skills = [skill.strip('\"') for skill in skills]
+        self.skills = [skill.strip('\"').strip('\\') for skill in skills]
         self.name_len = len(first_name) + len(last_name) + 1
 
         # Checks if the First name is longer than 18 characters. If so, then shorten.
@@ -76,50 +77,40 @@ def draw(i, hacker, left_right_offset):
     :return: none
     """
     # Draws an empty badge on the canvas.
-    c.drawImage(jpg_path, left_right_offset, bottom_offset + i * card_height, width=card_width,
-                height=card_height, mask=None)
+    c.drawImage(background_path, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
+                height=CARD_HEIGHT, mask=None)
 
     # Draws the full name on the badge.
-    c.drawCentredString(x=2.9 * inch + left_right_offset, y=bottom_offset + 2 * inch + i * card_height,
+    c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 2 * inch + i * CARD_HEIGHT,
                         text=hacker.first_name + " " + hacker.last_name)
 
     # Draws the school on the badge.
     c.setFont(font_name, 10)
-    c.drawCentredString(x=2.9 * inch + left_right_offset, y=bottom_offset + 1.75 * inch + i * card_height,
+    c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 1.75 * inch + i * CARD_HEIGHT,
                         text=hacker.university)
 
-    # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
-    if len(hacker.skills) == 1 and hacker.skills[0] != "null" and hacker.skills[0].strip('\\') != "":
-        c.drawImage(icon_path + hacker.skills[0].strip('\\') + ".jpg", 1.875 * inch + left_right_offset,
-                    bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-    elif len(hacker.skills) == 2:
-        n = 0
-        for skill in hacker.skills:
-            if n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.425 * inch + left_right_offset,
-                            bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-            else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.325 * inch + left_right_offset,
-                            bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-            n += 1
+    # # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
+    if len(hacker.skills) == 2:
+        start = 1.425
+        step = .9
     elif len(hacker.skills) == 3:
-        n = 0
-        for skill in hacker.skills:
-            if n == 0:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.175 * inch + left_right_offset,
-                            bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-            elif n == 1:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 1.875 * inch + left_right_offset,
-                            bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-            else:
-                c.drawImage(icon_path + skill.strip('\\') + ".jpg", 2.575 * inch + left_right_offset,
-                            bottom_offset + 0.1 * inch + i * card_height, width=30, height=30, mask=None)
-            n += 1
+        start = 1.175
+        step = .7
+    else:
+        start = 1.875
+        step = 0
+
+    for skill in hacker.skills:
+        if skill == "null" or skill == "":
+            break
+        c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
+                    BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+        start += step
 
 
 # Open CSV file.
-print('Reading from {}'.format(csv_file_path))
-with open(csv_file_path, mode='r') as csv_file:
+print('Reading from {}'.format(CSV_FILE_PATH))
+with open(CSV_FILE_PATH, mode='r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     row_num = 0
@@ -131,7 +122,7 @@ with open(csv_file_path, mode='r') as csv_file:
         if line_count % 2 == 0:
             draw(row_num, person, 0)
         else:
-            draw(row_num, person, card_width)
+            draw(row_num, person, CARD_WIDTH)
             row_num += 1
 
         # If on the third row, go to a new page and reset the row.
@@ -141,6 +132,5 @@ with open(csv_file_path, mode='r') as csv_file:
 
         line_count += 1
 
-print('Processed {} Badges to {}'.format(line_count, pdf_path))
-
+print('Processed {} Badges to {}'.format(line_count, PDF_PATH))
 c.save()
