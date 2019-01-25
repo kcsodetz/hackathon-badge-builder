@@ -96,7 +96,7 @@ def draw(i, hacker, left_right_offset):
     c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 1.75 * inch + i * CARD_HEIGHT,
                         text=hacker.university)
 
-    # # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
+    # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
     if len(hacker.skills) == 2:
         start = 1.425
         step = .9
