@@ -42,9 +42,9 @@ You will need to change the file names in both `hacker.py` and `exec.py` to matc
 
 The background assets are stored in `res/Background_JPGs`. If adding new backgrounds, either make sure they are named as such:
 
-1) Hacker Background = hacker_bkgd.jpg
-2) Sponsor Background = sponsor_bkgd.jpg
-3) Exec Background = exec_bkgd.jpg
+1) Hacker Background = `hacker_bkgd.jpg`
+2) Sponsor Background = `sponsor_bkgd.jpg`
+3) Exec Background = `exec_bkgd.jpg`
 
 Alternatively, you can change the background names in the python files themselves. For example, in `hacker.py`
 
