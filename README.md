@@ -1,7 +1,10 @@
 # Hackathon Badge Builder
 [![Maintainability](https://api.codeclimate.com/v1/badges/e4d3a4dc967cbb05df5b/maintainability)](https://codeclimate.com/github/kcsodetz/AccessCardGenerator/maintainability)
 
-Python script to create name badges for BoilerMake VI (and future BoilerMake Hackathons as well)
+Python script to create name badges for BoilerMake VI (and future BoilerMake Hackathons as well), as well as formatted table cards for hacker demos. 
+
+## Badge Spec
+The badges are output as a PDF. The script is set up to be 3 inches tall and 4.25 inches wide, layed out on US letter sized paper from the top left corner down, with a 2 inch margin offset at the bottom of the page. This gives a total of 6 badges per page.  
 
 ## Getting Started
 
@@ -63,17 +66,36 @@ The logo for the Table Cards is located in the root of the `res/` directory. The
 
 ## Running Scripts
 
-After adding the files and checking the file paths, you can run the `hacker.py` or `exec.py` with just 
+All scripts should be run through the command line.
+
+### Badges
+
+After adding the files and checking the file paths, you can run get the hacker badges by running
 
 ```sh
 $ python3 hacker.py
-Reading from data/rsvp_badges_2.csv
-Processed 597 Badges to out/hackers.pdf
 ```
 
+To generate the exec badges, run
 
+```sh
+$ python3 exec.py
+```
 
+For blank hacker or sponsor bagdes, run the `generic-badge.py` script with the argument being either `hacker` or `sponsor`
 
+```sh
+$ python3 generic-badge.py [type]
+```
 
+### Table Cards
 
+To for table cards, run `table-cards.py` with any positive integer argument for the number of cards needed.
 
+```sh
+$ python3 table-cards.py [number]
+```
+
+## Final PDF's
+
+All completed pdf's can be found in the `out/` directory.
