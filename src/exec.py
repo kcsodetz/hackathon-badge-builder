@@ -1,5 +1,5 @@
 """
-Python script to generate the Executive team badges for Boilermake VI
+Python script to generate the Executive team badges for BoilerMake VI
 
 Author: Ken Sodetz
 Since: 10/17/2018
@@ -11,24 +11,32 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-# Import font from .ttf file
-pdfmetrics.registerFont(TTFont('Lato-Regular', '../res/Lato/Lato-Regular.ttf'))
+# BACKGROUND AND CSV FILES (Change as needed)
+# ------------------------------------------
+background_file = "exec_bkgd.jpg"
+csv_file = "execs.csv"
+# ------------------------------------------
+
+# Font values
+font_name = "Lato-Regular"
+font_path = "../res/Lato/Lato-Regular.ttf"
 
 # Terminal Colors
 OK = '\033[92m'
 
-# Constant Values
+# Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
 CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
-
-# File paths
-jpg_path = "../res/AccessCardsJpg/AC_Exec.jpg"
-pdf_path = "out/execs.pdf"
-csv_path = "data/execs.csv"
+PDF_PATH = "out/execs.pdf"
+CSV_FILE_PATH = "data/" + csv_file
+BACKGROUND_PATH = "../res/Background_JPGs/" + background_file
 
 # Define our canvas
-c = canvas.Canvas(pdf_path, pagesize=letter)
+c = canvas.Canvas(PDF_PATH, pagesize=letter)
+
+# Import font from .ttf file
+pdfmetrics.registerFont(TTFont(font_name, font_path))
 
 
 def draw(i, name, left_right_offset):
@@ -39,19 +47,19 @@ def draw(i, name, left_right_offset):
     :param left_right_offset: Offset for drawing on the left or right side of the page
     :return: None
     """
-    c.drawImage(jpg_path, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
+    c.drawImage(BACKGROUND_PATH, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
                 height=CARD_HEIGHT, mask=None)
-    c.setFont("Lato-Regular", 16)
+    c.setFont(font_name, 16)
     c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 2 * inch + i * CARD_HEIGHT,
                         text=name)
-    c.setFont("Lato-Regular", 10)
+    c.setFont(font_name, 10)
     c.drawCentredString(x=0 + 2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 1.75 * inch + i * CARD_HEIGHT,
                         text="Purdue University")
 
 
 # Open CSV file.
-print("Reading from {}...".format(csv_path))
-with open(csv_path, mode='r') as csv_file:
+print("Reading from {}...".format(CSV_FILE_PATH))
+with open(CSV_FILE_PATH, mode='r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     row_num = 0
@@ -71,5 +79,5 @@ with open(csv_path, mode='r') as csv_file:
 
         line_count += 1
 
-print(OK + "Processed {} Badges to {}".format(line_count, pdf_path))
+print(OK + "Processed {} Badges to {}".format(line_count, PDF_PATH))
 c.save()

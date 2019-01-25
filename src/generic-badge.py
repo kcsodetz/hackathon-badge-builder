@@ -1,5 +1,5 @@
 """
-Python script to generate the blank Hacker badges for Boilermake VI
+Python script to generate the blank Hacker badges for BoilerMake VI
 
 Author: Ken Sodetz
 Since: 10/17/2018
@@ -9,29 +9,37 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
+# BACKGROUND FILE NAMES (Change as needed)
+# ----------------------------------------
+hacker_background_file = "hacker_bkgd.jpg"
+sponsor_background_file = "sponsor_bkgd.jpg"
+# ----------------------------------------
+
 # Terminal Colors
 OK = '\033[92m'
 FAIL = '\033[91m'
 WARN = '\033[93m'
 NC = '\033[0m'
 
-# Constant Values
+# Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
 CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
+BACKGROUND_PATH = "../res/Background_JPGs/"
 
+# Check number of args
 if len(sys.argv) != 2:
     print(FAIL + "[ERROR] Missing argument `type`")
     print(NC + "Possible types include `hacker` and `sponsor`")
-    print("Usage: python3 generic-badge.py `type`")
+    print("Usage: python3 generic-badge.py [type]")
     sys.exit(1)
 
 # Choose file path based on badge type specified
 if sys.argv[1] == 'hacker':
-    jpg_path = "../res/AccessCardsJpg/AC_Hacker.jpg"
+    jpg_path = BACKGROUND_PATH + hacker_background_file
     pdf_path = "out/hackers_blank.pdf"
 elif sys.argv[1] == 'sponsor':
-    jpg_path = "../res/AccessCardsJpg/AC_Sponsor.jpg"
+    jpg_path = BACKGROUND_PATH + sponsor_background_file
     pdf_path = "out/sponsors.pdf"
 else:
     print(FAIL + "[ERROR] Argument " + WARN + sys.argv[1] + FAIL + " does not match `hacker` or `sponsor`")

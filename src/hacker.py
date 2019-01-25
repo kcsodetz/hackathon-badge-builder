@@ -1,5 +1,5 @@
 """
-Python script to generate the Hacker badges for Boilermake VI
+Python script to generate the Hacker badges for BoilerMake VI
 
 Author: Ken Sodetz
 Since: 10/16/2018
@@ -11,22 +11,27 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+# BACKGROUND AND CSV FILES (Change as needed)
+# ----------------------------------
+background_file = "hacker_bkgd.jpg"
+csv_file = "rsvp_badges_2.csv"
+# ----------------------------------
+
 # Terminal Colors
 OK = '\033[92m'
 
-# Path values
+# Font values
 font_name = "Lato-Regular"
 font_path = "../res/Lato/Lato-Regular.ttf"
-background_path = "../res/AccessCardsJpg/AC_Hacker.jpg"
-csv_file = "rsvp_badges_2.csv"
 
-# Constant Values. Do not change
+# Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
 CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
 PDF_PATH = "out/hackers.pdf"
 CSV_FILE_PATH = "data/" + csv_file
-ICON_PATH = "../res/language_icons_jpg/"
+ICON_PATH = "../res/language_icons_JPGs/"
+BACKGROUND_PATH = "../res/Background_JPGs/" + background_file
 
 # Define our canvas.
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
@@ -79,7 +84,7 @@ def draw(i, hacker, left_right_offset):
     :return: none
     """
     # Draws an empty badge on the canvas.
-    c.drawImage(background_path, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
+    c.drawImage(BACKGROUND_PATH, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
                 height=CARD_HEIGHT, mask=None)
 
     # Draws the full name on the badge.
