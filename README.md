@@ -1,5 +1,5 @@
 # Hackathon Badge Builder
-[![Maintainability](https://api.codeclimate.com/v1/badges/e4d3a4dc967cbb05df5b/maintainability)](https://codeclimate.com/github/kcsodetz/AccessCardGenerator/maintainability)
+
 
 Python script to create name badges for BoilerMake VI (and future BoilerMake Hackathons as well), as well as formatted table cards for hacker demos. 
 
