@@ -1,7 +1,7 @@
 # Hackathon Badge Builder
 
 
-Python script to create name badges for BoilerMake VI (and future BoilerMake Hackathons as well), as well as formatted table cards for hacker demos. 
+Python script to create name badges for BoilerMake VI (and future BoilerMake Hackathons), as well as formatted table cards for hacker demos. 
 
 ## Badge Spec
 The badges are output as a PDF. The script is set up to be 3 inches tall and 4.25 inches wide, layed out on US letter sized paper from the top left corner down, with a 2 inch margin offset at the bottom of the page. This gives a total of 6 badges per page.  
