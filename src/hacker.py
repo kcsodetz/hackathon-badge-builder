@@ -5,6 +5,9 @@ Author: Ken Sodetz
 Since: 10/16/2018
 """
 import csv
+import pyqrcode
+import png
+from os import remove, removedirs, makedirs
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -13,8 +16,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 # BACKGROUND AND CSV FILES (Change as needed)
 # ----------------------------------
-background_file = "hacker_bkgd.jpg"
-csv_file = "rsvp_badges_2.csv"
+background_file = "blank.jpg"
+csv_file = "old_data.csv"
 # ----------------------------------
 
 # Terminal Colors
@@ -97,47 +100,63 @@ def draw(i, hacker, left_right_offset):
                         text=hacker.university)
 
     # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
-    if len(hacker.skills) == 2:
-        start = 1.425
-        step = .9
-    elif len(hacker.skills) == 3:
-        start = 1.175
-        step = .7
-    else:
-        start = 1.875
-        step = 0
+    # if len(hacker.skills) == 2:
+    #     start = 1.425
+    #     step = .9
+    # elif len(hacker.skills) == 3:
+    #     start = 1.175
+    #     step = .7
+    # else:
+    #     start = 1.875
+    #     step = 0
+    #
+    # for skill in hacker.skills:
+    #     if skill == "null" or skill == "":
+    #         break
+    #     c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
+    #                 BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+    #     start += step
 
-    for skill in hacker.skills:
-        if skill == "null" or skill == "":
-            break
-        c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
-                    BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
-        start += step
+    qr_path = get_qr(hacker)
+    c.drawImage(qr_path, 1 * inch + left_right_offset,
+                BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+    remove(qr_path)
 
 
-# Open CSV file.
-print('Reading from {}'.format(CSV_FILE_PATH))
-with open(CSV_FILE_PATH, mode='r') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count = 0
-    row_num = 0
-    # For each row in the csv file.
-    for row in csv_reader:
-        # Create instance of a person object to pass to either the left draw or right draw function.
-        person = Person(first_name=row[0], last_name=row[1], university=row[2], skills=row[3:6])
-        # If line is even, draw left. Else draw right.
-        if line_count % 2 == 0:
-            draw(row_num, person, 0)
-        else:
-            draw(row_num, person, CARD_WIDTH)
-            row_num += 1
+def get_qr(hacker):
+    qr_data = hacker.first_name + hacker.last_name
+    qr_code = pyqrcode.create(qr_data)
+    file_path = 'tmp/' + qr_data + '.png'
+    qr_code.png(file_path, scale=2, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
+    return file_path
 
-        # If on the third row, go to a new page and reset the row.
-        if row_num == 3:
-            c.showPage()
-            row_num = 0
 
-        line_count += 1
+if __name__ == '__main__':
+    makedirs("tmp", False)
+    # Open CSV file.
+    print('Reading from {}'.format(CSV_FILE_PATH))
+    with open(CSV_FILE_PATH, mode='r') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        row_num = 0
+        # For each row in the csv file.
+        for row in csv_reader:
+            # Create instance of a person object to pass to either the left draw or right draw function.
+            person = Person(first_name=row[0], last_name=row[1], university=row[2], skills=row[3:6])
+            # If line is even, draw left. Else draw right.
+            if line_count % 2 == 0:
+                draw(row_num, person, 0)
+            else:
+                draw(row_num, person, CARD_WIDTH)
+                row_num += 1
 
-print(OK + 'Processed {} Badges to {}'.format(line_count, PDF_PATH))
-c.save()
+            # If on the third row, go to a new page and reset the row.
+            if row_num == 3:
+                c.showPage()
+                row_num = 0
+
+            line_count += 1
+
+    removedirs("tmp")
+    print(OK + 'Processed {} Badges to {}'.format(line_count, PDF_PATH))
+    c.save()
