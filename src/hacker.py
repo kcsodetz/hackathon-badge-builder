@@ -17,7 +17,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 # BACKGROUND AND CSV FILES (Change as needed)
 # ----------------------------------
 background_file = "blank.jpg"
-csv_file = "old_data.csv"
+csv_file = "qr_test.csv"
 # ----------------------------------
 
 # Terminal Colors
@@ -44,7 +44,7 @@ pdfmetrics.registerFont(TTFont(font_name, font_path))
 
 
 class Person:
-    def __init__(self, first_name, last_name, university, skills):
+    def __init__(self, first_name, last_name, university, skills, qr):
         """
         Constructor for the Person Object.
         :param first_name: First name of the person.
@@ -76,6 +76,9 @@ class Person:
             self.university = "IUPUI"
         elif university == "Indiana University/Purdue University at Fort Wayne":
             self.university = "IPFW"
+
+        # qr code, integer format
+        self.qr = qr
 
 
 def draw(i, hacker, left_right_offset):
@@ -118,13 +121,16 @@ def draw(i, hacker, left_right_offset):
     #     start += step
 
     qr_path = get_qr(hacker)
+
+    # Draw qr code
     c.drawImage(qr_path, 1 * inch + left_right_offset,
                 BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
     remove(qr_path)
 
 
 def get_qr(hacker):
-    qr_data = hacker.first_name + hacker.last_name
+    qr_data = hacker.qr
+    print(hacker.qr)
     qr_code = pyqrcode.create(qr_data)
     file_path = 'tmp/' + qr_data + '.png'
     qr_code.png(file_path, scale=2, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
@@ -142,7 +148,7 @@ if __name__ == '__main__':
         # For each row in the csv file.
         for row in csv_reader:
             # Create instance of a person object to pass to either the left draw or right draw function.
-            person = Person(first_name=row[0], last_name=row[1], university=row[2], skills=row[3:6])
+            person = Person(first_name=row[0], last_name=row[1], university=row[2], qr=row[3], skills=row[4:7])
             # If line is even, draw left. Else draw right.
             if line_count % 2 == 0:
                 draw(row_num, person, 0)
