@@ -1,5 +1,5 @@
 """
-Python script to generate the blank Hacker badges for BoilerMake VI
+Python script to generate the blank Hacker and Sponsor badges for BoilerMake VI
 
 Author: Ken Sodetz
 Since: 10/17/2018
@@ -28,10 +28,11 @@ CARD_HEIGHT = 3 * inch
 BACKGROUND_PATH = "../res/Background_JPGs/"
 
 # Check number of args
-if len(sys.argv) != 2:
-    print(FAIL + "[ERROR] Missing argument `type`")
-    print(NC + "Possible types include `hacker` and `sponsor`")
-    print("Usage: python3 generic-badge.py [type]")
+if len(sys.argv) != 3:
+    print(FAIL + "[ERROR] Missing argument(s)")
+    print(NC + "Usage: python3 generic-badge.py [type] [num_page(s)]")
+    print("Possible types include `hacker` and `sponsor`")
+    print("Sets of badges are defined as num_page(s) (1 page = 6 badges)")
     sys.exit(1)
 
 # Choose file path based on badge type specified
@@ -42,8 +43,15 @@ elif sys.argv[1] == 'sponsor':
     jpg_path = BACKGROUND_PATH + sponsor_background_file
     pdf_path = "out/sponsors.pdf"
 else:
-    print(FAIL + "[ERROR] Argument " + WARN + sys.argv[1] + FAIL + " does not match `hacker` or `sponsor`")
-    sys.exit(1)
+    print(FAIL + "[ERROR] Argument 1 " + WARN + sys.argv[1] + FAIL + " does not match `hacker` or `sponsor`.")
+    sys.exit(2)
+
+# Save page number argument
+try:
+    PAGE_NUM = int(sys.argv[2])
+except ValueError:
+    print(FAIL + "[ERROR] Argument 2 " + WARN + sys.argv[2] + FAIL + " is not an integer.")
+    sys.exit(3)
 
 # Define our canvas.
 c = canvas.Canvas(pdf_path, pagesize=letter)
@@ -51,7 +59,7 @@ c = canvas.Canvas(pdf_path, pagesize=letter)
 
 def draw(left_right_offset):
     """
-    Draws the right half of the badges per one page.
+    Draws half of the badges per one page, 3 in a column
     :param left_right_offset: Offset for drawing on the left or right side of the page
     :return: None.
     """
@@ -60,12 +68,11 @@ def draw(left_right_offset):
                     height=CARD_HEIGHT, mask=None)
 
 
-# Determine how many pages to draw (6 cards per page), which gives 6 * page_num badges
-page_num = 5
-for j in range(page_num):
+# Draw left column (offset of 0) and right column (offset of CARD_WIDTH)
+for j in range(PAGE_NUM):
     draw(0)
     draw(CARD_WIDTH)
     c.showPage()
 
-print(OK + "Processed {} Badges to {}".format(page_num * 6, pdf_path))
+print(OK + "Processed {} Badges to {}".format(PAGE_NUM * 6, pdf_path))
 c.save()

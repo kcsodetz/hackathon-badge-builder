@@ -35,6 +35,29 @@ PDF_PATH = "out/hackers.pdf"
 CSV_FILE_PATH = "data/" + csv_file
 ICON_PATH = "../res/language_icons_JPGs/"
 BACKGROUND_PATH = "../res/Background_JPGs/" + background_file
+TMP_DIR = "tmp/"
+QR_EXT = ".png"
+
+SKILLS = ["android",
+          "C",
+          "css",
+          "design",
+          "go",
+          "hardware",
+          "html",
+          "ios",
+          "java",
+          "js",
+          "mobile",
+          "nodejs",
+          "obj-c",
+          "php",
+          "puzzle",
+          "python",
+          "ruby",
+          "swift",
+          "webdev"
+          ]
 
 # Define our canvas.
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
@@ -103,42 +126,49 @@ def draw(i, hacker, left_right_offset):
                         text=hacker.university)
 
     # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
-    # if len(hacker.skills) == 2:
-    #     start = 1.425
-    #     step = .9
-    # elif len(hacker.skills) == 3:
-    #     start = 1.175
-    #     step = .7
-    # else:
-    #     start = 1.875
-    #     step = 0
-    #
-    # for skill in hacker.skills:
-    #     if skill == "null" or skill == "":
-    #         break
-    #     c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
-    #                 BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
-    #     start += step
+    if len(hacker.skills) == 2:
+        start = 1.425
+        step = .9
+    elif len(hacker.skills) == 3:
+        start = 1.175
+        step = .7
+    else:
+        start = 1.875
+        step = 0
 
-    qr_path = get_qr(hacker)
+    for skill in hacker.skills:
+        # skip if skill is none, null, or not found in the list
+        if skill not in SKILLS:
+            continue
+        c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
+                    BOTTOM_OFFSET + 0.7 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+        start += step
 
     # Draw qr code
+    qr_path = get_qr(hacker)
     c.drawImage(qr_path, 1 * inch + left_right_offset,
                 BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+
+    # Delete qr code png when finished
     remove(qr_path)
 
 
 def get_qr(hacker):
+    """
+    Builds qr code from hacker data
+    :param hacker: Hacker object
+    :return: Qr code file path
+    """
     qr_data = hacker.qr
-    print(hacker.qr)
     qr_code = pyqrcode.create(qr_data)
-    file_path = 'tmp/' + qr_data + '.png'
+    file_path = TMP_DIR + qr_data + QR_EXT
     qr_code.png(file_path, scale=2, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
     return file_path
 
 
 if __name__ == '__main__':
-    makedirs("tmp", False)
+    # Create temporary directory to save qr codes
+    makedirs(TMP_DIR, False)
     # Open CSV file.
     print('Reading from {}'.format(CSV_FILE_PATH))
     with open(CSV_FILE_PATH, mode='r') as csv_file:
@@ -163,6 +193,8 @@ if __name__ == '__main__':
 
             line_count += 1
 
-    removedirs("tmp")
+    # Remove when no longer needed
+    removedirs(TMP_DIR)
+
     print(OK + 'Processed {} Badges to {}'.format(line_count, PDF_PATH))
     c.save()
