@@ -5,13 +5,16 @@ Author: Ken Sodetz
 Since: 10/17/2018
 """
 import sys
+from os import remove, removedirs, makedirs
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+import pyqrcode
+import png
 
 # BACKGROUND FILE NAMES (Change as needed)
 # ----------------------------------------
-hacker_background_file = "hacker_bkgd.jpg"
+hacker_background_file = "Hacker.jpg"
 sponsor_background_file = "sponsor_bkgd.jpg"
 # ----------------------------------------
 
@@ -21,11 +24,16 @@ FAIL = '\033[91m'
 WARN = '\033[93m'
 NC = '\033[0m'
 
+# QR Data Path
+QR_DATA_PATH = "blank_qr.csv"
+
 # Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
 CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
 BACKGROUND_PATH = "../res/Background_JPGs/"
+TMP_DIR = "tmp/"
+QR_EXT = ".png"
 
 # Check number of args
 if len(sys.argv) != 3:
@@ -66,6 +74,26 @@ def draw(left_right_offset):
     for i in range(3):
         c.drawImage(jpg_path, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
                     height=CARD_HEIGHT, mask=None)
+
+    # Draw qr code
+    # qr_path = get_qr(hacker)
+    # c.drawImage(qr_path, 1 * inch + left_right_offset,
+    #             BOTTOM_OFFSET + 0.1 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
+
+    # Delete qr code png when finished
+    # remove(qr_path)
+
+
+def get_qr(qr_data):
+    """
+    Builds qr code from hacker data
+    :param qr_data: QR ID
+    :return: Qr code file path
+    """
+    qr_code = pyqrcode.create(qr_data)
+    file_path = TMP_DIR + qr_data + QR_EXT
+    qr_code.png(file_path, scale=2, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
+    return file_path
 
 
 # Draw left column (offset of 0) and right column (offset of CARD_WIDTH)

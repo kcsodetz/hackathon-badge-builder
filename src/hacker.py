@@ -16,7 +16,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 # BACKGROUND AND CSV FILES (Change as needed)
 # ----------------------------------
-background_file = "blank.jpg"
+background_file = "Hacker.jpg"
 csv_file = "qr_test.csv"
 # ----------------------------------
 
@@ -24,8 +24,8 @@ csv_file = "qr_test.csv"
 OK = '\033[92m'
 
 # Font values
-font_name = "Lato-Regular"
-font_path = "../res/Lato/Lato-Regular.ttf"
+font_name = "Roboto-Black"
+font_path = "../res/Fonts/Roboto/Roboto-Black.ttf"
 
 # Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
@@ -33,31 +33,10 @@ CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
 PDF_PATH = "out/hackers.pdf"
 CSV_FILE_PATH = "data/" + csv_file
-ICON_PATH = "../res/language_icons_JPGs/"
 BACKGROUND_PATH = "../res/Background_JPGs/" + background_file
 TMP_DIR = "tmp/"
 QR_EXT = ".png"
 
-SKILLS = ["android",
-          "C",
-          "css",
-          "design",
-          "go",
-          "hardware",
-          "html",
-          "ios",
-          "java",
-          "js",
-          "mobile",
-          "nodejs",
-          "obj-c",
-          "php",
-          "puzzle",
-          "python",
-          "ruby",
-          "swift",
-          "webdev"
-          ]
 
 # Define our canvas.
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
@@ -124,25 +103,6 @@ def draw(i, hacker, left_right_offset):
     c.setFont(font_name, 10)
     c.drawCentredString(x=2.9 * inch + left_right_offset, y=BOTTOM_OFFSET + 1.75 * inch + i * CARD_HEIGHT,
                         text=hacker.university)
-
-    # Draws the skill icon(s) on the badge, depending if they have 1, 2, or 3 skills.
-    if len(hacker.skills) == 2:
-        start = 1.425
-        step = .9
-    elif len(hacker.skills) == 3:
-        start = 1.175
-        step = .7
-    else:
-        start = 1.875
-        step = 0
-
-    for skill in hacker.skills:
-        # skip if skill is none, null, or not found in the list
-        if skill not in SKILLS:
-            continue
-        c.drawImage(ICON_PATH + skill + ".jpg", start * inch + left_right_offset,
-                    BOTTOM_OFFSET + 0.7 * inch + i * CARD_HEIGHT, width=30, height=30, mask=None)
-        start += step
 
     # Draw qr code
     qr_path = get_qr(hacker)
