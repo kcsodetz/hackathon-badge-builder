@@ -25,7 +25,10 @@ OK = '\033[92m'
 
 # Font values
 font_name = "Roboto-Black"
-font_path = "../res/Fonts/Roboto/Roboto-Black.ttf"
+hacker_font_name = "Roboto-Black"
+info_font_name = "Roboto-Light"
+hacker_font_path = "../res/Fonts/Roboto/Roboto-Black.ttf"
+info_font_path = "../res/Fonts/Roboto/Roboto-Light.ttf"
 
 # Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 2 * inch
@@ -42,7 +45,8 @@ QR_EXT = ".png"
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
 
 # Import font from .ttf file.
-pdfmetrics.registerFont(TTFont(font_name, font_path))
+pdfmetrics.registerFont(TTFont(font_name, hacker_font_path))
+pdfmetrics.registerFont(TTFont(info_font_name, info_font_path))
 
 
 def draw(i, qr_data, left_right_offset):
@@ -57,6 +61,15 @@ def draw(i, qr_data, left_right_offset):
     c.drawImage(BACKGROUND_PATH, left_right_offset, BOTTOM_OFFSET + i * CARD_HEIGHT, width=CARD_WIDTH,
                 height=CARD_HEIGHT, mask=None)
 
+    c.setFillColorRGB(1, 1, 1)
+    c.setFont(info_font_name, 10.5)
+
+    # Draws the full name on the badge.
+    c.drawString(x=(1 + 1.6) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.3 * inch + i * CARD_HEIGHT, text="Boilermake.org")
+
+    # Draws the full name on the badge.
+    c.drawString(x=(1 + 1) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.143 * inch + i * CARD_HEIGHT,
+                 text="Boilermakeviii.slack.com")
     # Draw qr code
     qr_path = get_qr(qr_data)
     c.drawImage(qr_path, 2.125 * inch + left_right_offset,
