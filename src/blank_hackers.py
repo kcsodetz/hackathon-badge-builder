@@ -16,7 +16,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 # BACKGROUND AND CSV FILES (Change as needed)
 # ----------------------------------
-background_file = "Hacker.jpg"
+background_file = "Hacker_m.jpg"
 csv_file = "blank_qr.csv"
 # ----------------------------------
 
@@ -32,14 +32,13 @@ info_font_path = "../res/Fonts/Roboto/Roboto-Light.ttf"
 
 # Constant Values. DO NOT CHANGE
 BOTTOM_OFFSET = 1 * inch
-CARD_WIDTH = 4.25 * inch
+CARD_WIDTH = 4 * inch
 CARD_HEIGHT = 3 * inch
 PDF_PATH = "out/blank_hackers.pdf"
 CSV_FILE_PATH = "data/" + csv_file
 BACKGROUND_PATH = "../res/Background_JPGs/" + background_file
 TMP_DIR = "tmp/"
 QR_EXT = ".png"
-
 
 # Define our canvas.
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
@@ -65,7 +64,8 @@ def draw(i, qr_data, left_right_offset):
     c.setFont(info_font_name, 10.5)
 
     # Draws the full name on the badge.
-    c.drawString(x=(1 + 2.15) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.365 * inch + i * CARD_HEIGHT, text="Boilermake.org")
+    c.drawString(x=(1 + 2.15) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.365 * inch + i * CARD_HEIGHT,
+                 text="Boilermake.org")
 
     # Draws the full name on the badge.
     c.drawString(x=(1 + 1.59) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.175 * inch + i * CARD_HEIGHT,
@@ -87,8 +87,18 @@ def get_qr(qr_data):
     """
     qr_code = pyqrcode.create(qr_data)
     file_path = TMP_DIR + qr_data + QR_EXT
-    qr_code.png(file_path, scale=3, quiet_zone=0, module_color=[255, 255, 255, 128], background=(118, 138, 211, 0))
+    qr_code.png(file_path, scale=4, quiet_zone=0, module_color=[255, 255, 255, 128], background=(118, 138, 211, 0))
     return file_path
+
+
+def draw_margins():
+    c.setFillColorRGB(0, 0, 0)
+    c.setLineWidth(1)
+    c.line(0, 1 * inch, 8.5 * inch, 1 * inch)
+    c.line(0, 10 * inch, 8.5 * inch, 10 * inch)
+    c.line(0.25 * inch, 0, 0.25 * inch, 11.5 * inch)
+    c.line(4.25 * inch, 0, 4.25 * inch, 11.5 * inch)
+    c.line(8.25 * inch, 0, 8.25 * inch, 11.5 * inch)
 
 
 if __name__ == '__main__':
@@ -106,13 +116,14 @@ if __name__ == '__main__':
             qr_id = row[0]
             # If line is even, draw left. Else draw right.
             if line_count % 2 == 0:
-                draw(row_num, qr_id, 0)
+                draw(row_num, qr_id, 0.25 * inch)
             else:
-                draw(row_num, qr_id, CARD_WIDTH)
+                draw(row_num, qr_id, CARD_WIDTH + 0.25 * inch)
                 row_num += 1
 
             # If on the third row, go to a new page and reset the row.
             if row_num == 3:
+                draw_margins()
                 c.showPage()
                 row_num = 0
 
