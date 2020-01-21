@@ -31,7 +31,7 @@ hacker_font_path = "../res/Fonts/Roboto/Roboto-Black.ttf"
 info_font_path = "../res/Fonts/Roboto/Roboto-Light.ttf"
 
 # Constant Values. DO NOT CHANGE
-BOTTOM_OFFSET = 2 * inch
+BOTTOM_OFFSET = 1 * inch
 CARD_WIDTH = 4.25 * inch
 CARD_HEIGHT = 3 * inch
 PDF_PATH = "out/blank_hackers.pdf"
@@ -65,15 +65,15 @@ def draw(i, qr_data, left_right_offset):
     c.setFont(info_font_name, 10.5)
 
     # Draws the full name on the badge.
-    c.drawString(x=(1 + 1.6) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.3 * inch + i * CARD_HEIGHT, text="Boilermake.org")
+    c.drawString(x=(1 + 2.15) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.365 * inch + i * CARD_HEIGHT, text="Boilermake.org")
 
     # Draws the full name on the badge.
-    c.drawString(x=(1 + 1) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.143 * inch + i * CARD_HEIGHT,
-                 text="Boilermakeviii.slack.com")
+    c.drawString(x=(1 + 1.59) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.175 * inch + i * CARD_HEIGHT,
+                 text="boilermakevii.slack.com")
     # Draw qr code
     qr_path = get_qr(qr_data)
-    c.drawImage(qr_path, 2.125 * inch + left_right_offset,
-                BOTTOM_OFFSET + 0.75 * inch + i * CARD_HEIGHT, width=1.25 * inch, height=1.25 * inch, mask=None)
+    c.drawImage(qr_path, 1.63 * inch + left_right_offset,
+                BOTTOM_OFFSET + 0.93 * inch + i * CARD_HEIGHT, width=1 * inch, height=1 * inch, mask=None)
 
     # Delete qr code png when finished
     remove(qr_path)
@@ -87,7 +87,7 @@ def get_qr(qr_data):
     """
     qr_code = pyqrcode.create(qr_data)
     file_path = TMP_DIR + qr_data + QR_EXT
-    qr_code.png(file_path, scale=3, module_color=[255, 255, 255, 128], background=(118, 138, 211, 0))
+    qr_code.png(file_path, scale=3, quiet_zone=0, module_color=[255, 255, 255, 128], background=(118, 138, 211, 0))
     return file_path
 
 
