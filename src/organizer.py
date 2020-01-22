@@ -44,9 +44,6 @@ QR_EXT = ".png"
 # Define our canvas.
 c = canvas.Canvas(PDF_PATH, pagesize=letter)
 
-# Set fill color to white
-c.setFillColorRGB(1, 1, 1)
-
 # Import font from .ttf file.
 pdfmetrics.registerFont(TTFont(hacker_font_name, hacker_font_path))
 pdfmetrics.registerFont(TTFont(info_font_name, info_font_path))
@@ -72,6 +69,9 @@ def draw(row_offset, organizer_name, left_right_offset):
     # Draws an empty badge on the canvas.
     c.drawImage(BACKGROUND_PATH, left_right_offset, BOTTOM_OFFSET + row_offset * CARD_HEIGHT, width=CARD_WIDTH,
                 height=CARD_HEIGHT, mask=None)
+
+    # Set fill color to white
+    c.setFillColorRGB(1, 1, 1)
 
     # Set font size based on organizer's name length
     c.setFont(hacker_font_name, 18)
