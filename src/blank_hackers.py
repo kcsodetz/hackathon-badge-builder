@@ -6,7 +6,6 @@ Since: 10/16/2018
 """
 import csv
 import pyqrcode
-import png
 from os import remove, removedirs, makedirs
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -64,15 +63,15 @@ def draw(i, qr_data, left_right_offset):
     c.setFont(info_font_name, 10.5)
 
     # Draws the full name on the badge.
-    c.drawString(x=(1 + 2.15) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.365 * inch + i * CARD_HEIGHT,
+    c.drawString(x=(.7 + 2.15) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.365 * inch + i * CARD_HEIGHT,
                  text="Boilermake.org")
 
     # Draws the full name on the badge.
-    c.drawString(x=(1 + 1.59) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.175 * inch + i * CARD_HEIGHT,
+    c.drawString(x=(.7 + 1.59) * inch + left_right_offset, y=BOTTOM_OFFSET + 0.175 * inch + i * CARD_HEIGHT,
                  text="boilermakevii.slack.com")
     # Draw qr code
     qr_path = get_qr(qr_data)
-    c.drawImage(qr_path, 1.63 * inch + left_right_offset,
+    c.drawImage(qr_path, (1.63 - .25) * inch + left_right_offset,
                 BOTTOM_OFFSET + 0.93 * inch + i * CARD_HEIGHT, width=1 * inch, height=1 * inch, mask=None)
 
     # Delete qr code png when finished
