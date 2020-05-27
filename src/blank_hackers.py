@@ -1,5 +1,5 @@
 """
-Python script to generate the Hacker badges for BoilerMake VI
+Python script to generate the Hacker badges for BoilerMake VII
 
 Author: Ken Sodetz
 Since: 10/16/2018
