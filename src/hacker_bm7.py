@@ -7,7 +7,7 @@ Since: 10/16/2018
 import csv
 import pyqrcode
 import string
-from os import remove, removedirs, makedirs
+from os import remove, removedirs, makedirs, path
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -78,10 +78,10 @@ class Person:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + ". " + self.name.split()[2]
             elif len(self.name.split()) == 4:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + ". " + self.name.split()[2] + \
-                    " " + self.name.split()[3]
+                            " " + self.name.split()[3]
             elif len(self.name.split()) == 5:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + "." + self.name.split()[2][0] + \
-                    "." + self.name.split()[3][0] + ". " + self.name.split()[4]
+                            "." + self.name.split()[3][0] + ". " + self.name.split()[4]
 
         # Edits the school name to fit on the badge.
         if university == "Other/School not listed":
@@ -119,10 +119,8 @@ class Person:
         elif university == "Missouri University of Science and Technology":
             self.university = "Missouri S&T"
         elif university == "Purdue University - West Lafayette" or university == "Purdue" or \
-                "Purdue University/UC Berkeley":
+                university == "Purdue University/UC Berkeley":
             self.university = "Purdue University"
-        elif university == "University of California-San Diego":
-            self.university = "UCSD"
         elif university == "University of California-San Diego":
             self.university = "UCSD"
         elif university == "Colorado School of Mines":
@@ -222,7 +220,9 @@ def draw_margins():
 
 if __name__ == '__main__':
     # Create temporary directory to save qr codes
-    makedirs(TMP_DIR, False)
+    # makedirs(TMP_DIR, False)
+    if not path.isdir(TMP_DIR):
+        makedirs(TMP_DIR)
     # Open CSV file.
     print('Reading from {}'.format(CSV_FILE_PATH))
     with open(CSV_FILE_PATH, mode='r') as csv_file:
