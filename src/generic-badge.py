@@ -1,5 +1,5 @@
 """
-Python script to generate the blank Hacker and Sponsor badges for BoilerMake VI
+Python script to generate the blank Hacker and Sponsor badges for BoilerMake VII
 
 Author: Ken Sodetz
 Since: 10/17/2018
