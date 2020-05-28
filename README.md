@@ -105,7 +105,7 @@ $ python3 hacker.py
 To generate the exec badges, run
 
 ```sh
-$ python3 exec.py
+$ python3 organizer.py
 ```
 
 To generate the sponsor badges, run
