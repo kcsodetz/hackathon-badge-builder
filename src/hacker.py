@@ -70,15 +70,20 @@ class Person:
             c.setFont(hacker_font_name, 16)
         elif 20 <= self.name_len < 23:
             c.setFont(hacker_font_name, 14)
+        # If greater than or equal to 23 characters, then we need to truncate the name
         elif self.name_len >= 23:
             c.setFont(hacker_font_name, 14)
+            # If its just a first and last name, then take the first initial and concat with last name
             if len(self.name.split()) == 2:
                 self.name = self.name.split()[0][0] + ". " + self.name.split()[1]
+            # If there are 3 names, the first characters of the first and middle names are used with full last name
             elif len(self.name.split()) == 3:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + ". " + self.name.split()[2]
+            # If there are 4 names, do the same as 3 names but use the last two names in full
             elif len(self.name.split()) == 4:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + ". " + self.name.split()[2] + \
                             " " + self.name.split()[3]
+            # If there are 5 names, use the first character of each name along with the full last name
             elif len(self.name.split()) == 5:
                 self.name = self.name.split()[0][0] + "." + self.name.split()[1][0] + "." + self.name.split()[2][0] + \
                             "." + self.name.split()[3][0] + ". " + self.name.split()[4]
